@@ -1,231 +1,242 @@
 "use client";
+import { motion } from "framer-motion";
+import { ExternalLink, Github, Star, GitFork } from "lucide-react";
+import Link from "next/link";
+import AnimatedSection from "./AnimatedSection";
 
-import { ExternalLink, Github, Star } from "lucide-react";
+export type Repo = {
+  id: number;
+  name: string;
+  description: string | null;
+  html_url: string;
+  homepage: string | null;
+  stargazers_count: number;
+  forks_count: number;
+  language: string | null;
+  topics: string[];
+  pushed_at: string;
+};
 
-type Project = {
+export type FeaturedProject = {
   name: string;
   description: string;
   tech: string[];
   liveUrl?: string;
   githubUrl: string;
-  stars: number;
-  featured?: boolean;
+  stars?: number;
   badge?: string;
+  color: string;
 };
 
-const projects: Project[] = [
+export const featuredProjects: FeaturedProject[] = [
   {
     name: "CSC Travels",
-    description:
-      "A full-featured travel booking platform with real-time availability, booking management, and payment flow. Built with Next.js and TypeScript.",
+    description: "A full-featured travel booking platform with real-time availability, booking management, and complete payment flow.",
     tech: ["Next.js", "TypeScript", "Tailwind CSS"],
     liveUrl: "https://csctravels.vercel.app",
     githubUrl: "https://github.com/Var6/CSCTravels",
-    stars: 0,
-    featured: true,
     badge: "Live",
+    color: "indigo",
   },
   {
     name: "Citizen IMF",
-    description:
-      "IMF Citizen — a government-grade citizen management portal with authentication, dashboards, and data management features.",
+    description: "Government-grade citizen management portal with authentication, dashboards, and comprehensive data management.",
     tech: ["Next.js", "TypeScript", "Tailwind CSS"],
     liveUrl: "https://citizen-imf.vercel.app",
     githubUrl: "https://github.com/Var6/CitizenIMF",
-    stars: 1,
-    featured: true,
     badge: "Live",
+    color: "purple",
   },
   {
     name: "CSC Billing",
-    description:
-      "A billing and invoicing SaaS dashboard for small businesses. Features real-time billing, PDF exports, and client management.",
+    description: "SaaS billing & invoicing dashboard for small businesses with real-time billing, PDF exports, and client management.",
     tech: ["Next.js", "TypeScript", "Tailwind CSS"],
     liveUrl: "https://csc-billing.vercel.app",
     githubUrl: "https://github.com/Var6/CSCBilling",
-    stars: 0,
     badge: "Live",
-  },
-  {
-    name: "Shemford Web",
-    description:
-      "A professional school/institution website with modern UI, event listings, admissions flow, and content management.",
-    tech: ["Next.js", "TypeScript", "Tailwind CSS"],
-    liveUrl: "https://shemford-web.vercel.app",
-    githubUrl: "https://github.com/Var6/ShemfordWeb",
-    stars: 1,
-    badge: "Live",
-  },
-  {
-    name: "HRM System",
-    description:
-      "A Human Resource Management system featuring employee records, attendance tracking, leave management, and role-based access control.",
-    tech: ["Next.js", "TypeScript", "PostgreSQL"],
-    githubUrl: "https://github.com/Var6/HRM",
-    stars: 0,
-  },
-  {
-    name: "Citizen Jaivik Mobile App",
-    description:
-      "A React Native mobile app for citizens to access organic produce marketplace, farmer connections, and government scheme information.",
-    tech: ["React Native", "TypeScript", "Expo"],
-    githubUrl: "https://github.com/Var6/CitizenJaivikMobileApp",
-    stars: 1,
-    badge: "Mobile",
-  },
-  {
-    name: "AI Camera System",
-    description:
-      "An AI-powered camera system for real-time object detection, face recognition, and intelligent video analytics using computer vision.",
-    tech: ["Python", "Computer Vision", "AI/ML"],
-    githubUrl: "https://github.com/Var6/Ai_Camera",
-    stars: 0,
-    badge: "AI",
-  },
-  {
-    name: "Lan Convo",
-    description:
-      "A local network messaging and conversation app enabling real-time communication between devices on the same LAN.",
-    tech: ["TypeScript", "WebSockets", "Next.js"],
-    githubUrl: "https://github.com/Var6/Lan-Convo",
-    stars: 0,
+    color: "cyan",
   },
 ];
 
 const badgeColor: Record<string, string> = {
-  Live: "bg-green-500/15 text-green-400 border-green-500/30",
-  Mobile: "bg-blue-500/15 text-blue-400 border-blue-500/30",
-  AI: "bg-purple-500/15 text-purple-400 border-purple-500/30",
+  Live: "bg-green-100 dark:bg-green-500/15 text-green-700 dark:text-green-400 border-green-300 dark:border-green-500/30",
+  Mobile: "bg-blue-100 dark:bg-blue-500/15 text-blue-700 dark:text-blue-400 border-blue-300 dark:border-blue-500/30",
+  AI: "bg-purple-100 dark:bg-purple-500/15 text-purple-700 dark:text-purple-400 border-purple-300 dark:border-purple-500/30",
 };
 
-export default function Projects() {
+const cardGradient: Record<string, string> = {
+  indigo: "from-indigo-500/10 to-transparent dark:from-indigo-600/10",
+  purple: "from-purple-500/10 to-transparent dark:from-purple-600/10",
+  cyan: "from-cyan-500/10 to-transparent dark:from-cyan-600/10",
+};
+
+export function FeaturedProjectCard({ project, index }: { project: FeaturedProject; index: number }) {
   return (
-    <section id="projects" className="py-24 bg-[#0d0d16]">
-      <div className="max-w-6xl mx-auto px-6">
-        <div className="text-center mb-16">
-          <p className="text-indigo-400 text-sm font-semibold tracking-widest uppercase mb-3">
-            Projects
-          </p>
-          <h2 className="text-4xl lg:text-5xl font-extrabold text-white">
-            Things I&apos;ve <span className="gradient-text">built</span>
-          </h2>
-          <p className="text-slate-400 mt-4 max-w-xl mx-auto">
-            From SaaS platforms to mobile apps — here&apos;s a selection of real
-            projects I&apos;ve shipped.
-          </p>
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.6, delay: index * 0.12, ease: [0.25, 0.4, 0.25, 1] }}
+      className="card-bg rounded-2xl overflow-hidden hover:border-indigo-300 dark:hover:border-indigo-500/40 transition-all duration-300 group flex flex-col"
+    >
+      {/* Color bar header */}
+      <div className={`h-1.5 w-full bg-gradient-to-r ${
+        project.color === "indigo" ? "from-indigo-500 to-purple-500" :
+        project.color === "purple" ? "from-purple-500 to-pink-500" :
+        "from-cyan-500 to-blue-500"
+      }`} />
+      {/* Card body */}
+      <div className={`p-5 sm:p-6 flex flex-col gap-4 flex-1 bg-gradient-to-br ${cardGradient[project.color]}`}>
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex-1">
+            <div className="flex items-center gap-2 flex-wrap mb-1">
+              <h3 className="text-slate-900 dark:text-white font-bold text-base sm:text-lg">{project.name}</h3>
+              {project.badge && (
+                <span className={`px-2 py-0.5 rounded-full text-xs font-semibold border ${badgeColor[project.badge] ?? ""}`}>
+                  {project.badge}
+                </span>
+              )}
+            </div>
+          </div>
         </div>
 
-        {/* Featured grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          {projects
-            .filter((p) => p.featured)
-            .map((project) => (
-              <ProjectCard key={project.name} project={project} large />
-            ))}
+        <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed flex-1">{project.description}</p>
+
+        <div className="flex flex-wrap gap-1.5">
+          {project.tech.map((t) => (
+            <span key={t} className="px-2.5 py-1 rounded-md bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/8 text-slate-600 dark:text-slate-400 text-xs">
+              {t}
+            </span>
+          ))}
         </div>
 
-        {/* Rest */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {projects
-            .filter((p) => !p.featured)
-            .map((project) => (
-              <ProjectCard key={project.name} project={project} />
-            ))}
-        </div>
-
-        <div className="text-center mt-12">
+        <div className="flex items-center gap-4 pt-1">
           <a
-            href="https://github.com/Var6"
+            href={project.githubUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-white/15 hover:border-indigo-500/50 text-slate-300 hover:text-white text-sm font-medium transition-all duration-200"
+            className="flex items-center gap-1.5 text-slate-500 hover:text-slate-900 dark:hover:text-white text-xs font-medium transition-colors"
           >
-            <Github size={16} />
-            See all on GitHub
+            <Github size={14} />
+            Code
           </a>
+          {project.liveUrl && (
+            <a
+              href={project.liveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 text-xs font-medium transition-colors"
+            >
+              <ExternalLink size={14} />
+              Live Demo
+            </a>
+          )}
         </div>
       </div>
-    </section>
+    </motion.div>
   );
 }
 
-function ProjectCard({
-  project,
-  large = false,
-}: {
-  project: Project;
-  large?: boolean;
-}) {
+export function RepoCard({ repo, index }: { repo: Repo; index: number }) {
+  const langColor: Record<string, string> = {
+    TypeScript: "bg-blue-500",
+    JavaScript: "bg-yellow-400",
+    Python: "bg-green-500",
+    CSS: "bg-pink-500",
+    HTML: "bg-orange-500",
+  };
+
   return (
-    <div
-      className={`card-hover bg-white/3 border border-white/8 rounded-2xl p-6 flex flex-col gap-4 ${
-        large ? "" : ""
-      }`}
+    <motion.a
+      href={repo.html_url}
+      target="_blank"
+      rel="noopener noreferrer"
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{ duration: 0.5, delay: index * 0.06, ease: [0.25, 0.4, 0.25, 1] }}
+      className="card-bg rounded-2xl p-5 flex flex-col gap-3 hover:border-indigo-300 dark:hover:border-indigo-500/40 transition-all duration-200 group"
     >
-      {/* Header */}
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex-1">
-          <div className="flex items-center gap-2 flex-wrap mb-1">
-            <h3 className="text-white font-bold text-lg">{project.name}</h3>
-            {project.badge && (
-              <span
-                className={`px-2 py-0.5 rounded-full text-xs font-semibold border ${
-                  badgeColor[project.badge] ??
-                  "bg-slate-500/15 text-slate-400 border-slate-500/30"
-                }`}
-              >
-                {project.badge}
-              </span>
-            )}
-          </div>
-        </div>
-        {project.stars > 0 && (
-          <div className="flex items-center gap-1 text-yellow-400 text-xs">
-            <Star size={12} fill="currentColor" />
-            {project.stars}
-          </div>
-        )}
+      <div className="flex items-start justify-between gap-2">
+        <h3 className="text-slate-900 dark:text-white font-semibold text-sm group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors line-clamp-1">
+          {repo.name}
+        </h3>
+        <Github size={14} className="text-slate-400 flex-shrink-0 mt-0.5" />
       </div>
 
-      <p className="text-slate-400 text-sm leading-relaxed flex-1">
-        {project.description}
+      <p className="text-slate-500 dark:text-slate-400 text-xs leading-relaxed line-clamp-2 flex-1">
+        {repo.description ?? "No description provided."}
       </p>
 
-      {/* Tech tags */}
-      <div className="flex flex-wrap gap-2">
-        {project.tech.map((t) => (
-          <span
-            key={t}
-            className="px-2.5 py-1 rounded-md bg-white/5 border border-white/8 text-slate-400 text-xs"
-          >
-            {t}
+      <div className="flex items-center gap-3 mt-auto">
+        {repo.language && (
+          <span className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
+            <span className={`w-2 h-2 rounded-full ${langColor[repo.language] ?? "bg-slate-400"}`} />
+            {repo.language}
           </span>
-        ))}
-      </div>
-
-      {/* Links */}
-      <div className="flex items-center gap-3 pt-1">
-        <a
-          href={project.githubUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-1.5 text-slate-400 hover:text-white text-xs font-medium transition-colors"
-        >
-          <Github size={14} />
-          Code
-        </a>
-        {project.liveUrl && (
-          <a
-            href={project.liveUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-1.5 text-indigo-400 hover:text-indigo-300 text-xs font-medium transition-colors"
-          >
-            <ExternalLink size={14} />
-            Live Demo
-          </a>
+        )}
+        {repo.stargazers_count > 0 && (
+          <span className="flex items-center gap-1 text-xs text-yellow-600 dark:text-yellow-400">
+            <Star size={11} fill="currentColor" />
+            {repo.stargazers_count}
+          </span>
+        )}
+        {repo.forks_count > 0 && (
+          <span className="flex items-center gap-1 text-xs text-slate-400">
+            <GitFork size={11} />
+            {repo.forks_count}
+          </span>
         )}
       </div>
-    </div>
+    </motion.a>
+  );
+}
+
+export default function Projects({ repos = [] }: { repos?: Repo[] }) {
+  return (
+    <section id="projects" className="py-20 sm:py-24 section-alt">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        <AnimatedSection className="text-center mb-14">
+          <p className="text-indigo-600 dark:text-indigo-400 text-xs font-bold tracking-widest uppercase mb-3">
+            Projects
+          </p>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white">
+            Things I&apos;ve <span className="gradient-text">built</span>
+          </h2>
+          <p className="text-slate-500 dark:text-slate-400 mt-4 max-w-xl mx-auto text-sm sm:text-base">
+            From SaaS platforms to mobile apps — real projects shipped for real clients.
+          </p>
+        </AnimatedSection>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
+          {featuredProjects.map((p, i) => (
+            <FeaturedProjectCard key={p.name} project={p} index={i} />
+          ))}
+        </div>
+
+        {repos.length > 0 && (
+          <>
+            <AnimatedSection className="mb-6">
+              <h3 className="text-slate-700 dark:text-slate-300 font-semibold text-sm">
+                More from GitHub
+              </h3>
+            </AnimatedSection>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {repos.map((r, i) => <RepoCard key={r.id} repo={r} index={i} />)}
+            </div>
+          </>
+        )}
+
+        <AnimatedSection className="text-center mt-12">
+          <Link
+            href="/projects"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-slate-300 dark:border-white/15 hover:border-indigo-400 dark:hover:border-indigo-500/50 text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-white text-sm font-medium transition-all duration-200"
+          >
+            <Github size={16} />
+            View All Projects
+          </Link>
+        </AnimatedSection>
+      </div>
+    </section>
   );
 }

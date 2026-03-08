@@ -1,30 +1,49 @@
-import { Github, Mail } from "lucide-react";
+import Link from "next/link";
+import { Github, Linkedin, Instagram, Mail, Phone } from "lucide-react";
 
 export default function Footer() {
   const year = new Date().getFullYear();
   return (
-    <footer className="bg-[#0a0a0f] border-t border-white/5 py-10">
-      <div className="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-        <p className="text-slate-500 text-sm">
-          © {year} Rishabh Ranjan. Built with Next.js &amp; Tailwind CSS.
-        </p>
-        <div className="flex items-center gap-4">
-          <a
-            href="https://github.com/Var6"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-slate-500 hover:text-white transition-colors"
-            aria-label="GitHub"
-          >
-            <Github size={18} />
-          </a>
-          <a
-            href="mailto:rishabhranjandev@gmail.com"
-            className="text-slate-500 hover:text-white transition-colors"
-            aria-label="Email"
-          >
-            <Mail size={18} />
-          </a>
+    <footer className="section-alt border-t border-slate-200 dark:border-white/5 py-10 sm:py-12">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div className="text-center sm:text-left">
+            <Link href="/" className="text-xl font-bold gradient-text tracking-tight mb-1 inline-block">
+              RR.
+            </Link>
+            <p className="text-slate-500 dark:text-slate-500 text-xs">
+              © {year} Rishabh Ranjan · Built with Next.js & Tailwind CSS
+            </p>
+          </div>
+
+          <div className="flex flex-col items-center sm:items-end gap-3">
+            <div className="flex items-center gap-3">
+              {[
+                { href: "https://github.com/Var6", icon: Github, label: "GitHub" },
+                { href: "https://www.linkedin.com/in/rishabhranjan6626/", icon: Linkedin, label: "LinkedIn" },
+                { href: "https://www.instagram.com/Rishabh_stark", icon: Instagram, label: "Instagram" },
+                { href: "mailto:rishabhranjan6626@gmail.com", icon: Mail, label: "Email" },
+                { href: "tel:+917352569099", icon: Phone, label: "Phone" },
+              ].map(({ href, icon: Icon, label }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target={href.startsWith("mailto") || href.startsWith("tel") ? undefined : "_blank"}
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  className="p-2 rounded-lg text-slate-400 hover:text-indigo-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5 transition-colors"
+                >
+                  <Icon size={16} />
+                </a>
+              ))}
+            </div>
+            <div className="flex items-center gap-4 text-xs text-slate-400">
+              <Link href="/about" className="hover:text-indigo-600 dark:hover:text-white transition-colors">About</Link>
+              <Link href="/projects" className="hover:text-indigo-600 dark:hover:text-white transition-colors">Projects</Link>
+              <Link href="/experience" className="hover:text-indigo-600 dark:hover:text-white transition-colors">Experience</Link>
+              <Link href="/contact" className="hover:text-indigo-600 dark:hover:text-white transition-colors">Contact</Link>
+            </div>
+          </div>
         </div>
       </div>
     </footer>
