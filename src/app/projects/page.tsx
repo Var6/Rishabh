@@ -1,7 +1,8 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { FeaturedProjectCard, RepoCard, featuredProjects } from "@/components/Projects";
+import { FeaturedProjectCard, RepoCard } from "@/components/Projects";
 import type { Repo } from "@/components/Projects";
+import { featuredProjects, extraProjects } from "@/lib/projects-data";
 import AnimatedSection from "@/components/AnimatedSection";
 import type { Metadata } from "next";
 
@@ -9,48 +10,6 @@ export const metadata: Metadata = {
   title: "Projects — Rishabh Ranjan",
   description: "All projects built by Rishabh Ranjan — web apps, mobile apps, SaaS platforms, and AI tools.",
 };
-
-const extraProjects = [
-  {
-    name: "Shemford Web",
-    description: "Professional school/institution website with modern UI, event listings, admissions flow, and content management.",
-    tech: ["Next.js", "TypeScript", "Tailwind CSS"],
-    liveUrl: "https://shemford-web.vercel.app",
-    githubUrl: "https://github.com/Var6/ShemfordWeb",
-    badge: "Live" as const,
-    color: "purple",
-  },
-  {
-    name: "HRM System",
-    description: "Human Resource Management system with employee records, attendance tracking, leave management, and RBAC.",
-    tech: ["Next.js", "TypeScript", "PostgreSQL"],
-    githubUrl: "https://github.com/Var6/HRM",
-    color: "cyan",
-  },
-  {
-    name: "Citizen Jaivik",
-    description: "React Native mobile app for citizens to access organic produce marketplace, farmer connections, and government schemes.",
-    tech: ["React Native", "TypeScript", "Expo"],
-    githubUrl: "https://github.com/Var6/CitizenJaivikMobileApp",
-    badge: "Mobile" as const,
-    color: "indigo",
-  },
-  {
-    name: "AI Camera System",
-    description: "AI-powered camera for real-time object detection, face recognition, and intelligent video analytics using computer vision.",
-    tech: ["Python", "Computer Vision", "AI/ML"],
-    githubUrl: "https://github.com/Var6/Ai_Camera",
-    badge: "AI" as const,
-    color: "purple",
-  },
-  {
-    name: "Lan Convo",
-    description: "Local network messaging app enabling real-time communication between devices on the same LAN.",
-    tech: ["TypeScript", "WebSockets", "Next.js"],
-    githubUrl: "https://github.com/Var6/Lan-Convo",
-    color: "cyan",
-  },
-];
 
 async function getRepos(): Promise<Repo[]> {
   try {
@@ -70,8 +29,10 @@ async function getRepos(): Promise<Repo[]> {
 export default async function ProjectsPage() {
   const allRepos = await getRepos();
 
-  // Filter out repos already shown in featured
-  const knownNames = [...featuredProjects, ...extraProjects].map((p) => p.name.toLowerCase().replace(/\s/g, ""));
+  // Filter out repos already shown in curated lists
+  const knownNames = [...featuredProjects, ...extraProjects].map((p) =>
+    p.name.toLowerCase().replace(/\s/g, "")
+  );
   const dynamicRepos = allRepos.filter(
     (r) => !knownNames.includes(r.name.toLowerCase().replace(/\s/g, "")) && r.name !== "portfolio"
   );
@@ -106,7 +67,7 @@ export default async function ProjectsPage() {
               {featuredProjects.map((p, i) => <FeaturedProjectCard key={p.name} project={p} index={i} />)}
             </div>
 
-            {/* More client projects */}
+            {/* More */}
             <AnimatedSection className="mb-6">
               <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
                 <span className="w-1 h-5 rounded-full bg-purple-500 inline-block" />

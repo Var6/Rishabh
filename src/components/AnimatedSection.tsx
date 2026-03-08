@@ -30,7 +30,7 @@ export default function AnimatedSection({
       initial={initial}
       whileInView={{ opacity: 1, y: 0, x: 0 }}
       viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.6, ease: [0.25, 0.4, 0.25, 1], delay }}
+      transition={{ duration: 0.6, ease: "easeOut", delay }}
     >
       {children}
     </motion.div>

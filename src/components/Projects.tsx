@@ -3,6 +3,10 @@ import { motion } from "framer-motion";
 import { ExternalLink, Github, Star, GitFork } from "lucide-react";
 import Link from "next/link";
 import AnimatedSection from "./AnimatedSection";
+import { featuredProjects } from "@/lib/projects-data";
+import type { FeaturedProject } from "@/lib/projects-data";
+
+export type { FeaturedProject };
 
 export type Repo = {
   id: number;
@@ -16,47 +20,6 @@ export type Repo = {
   topics: string[];
   pushed_at: string;
 };
-
-export type FeaturedProject = {
-  name: string;
-  description: string;
-  tech: string[];
-  liveUrl?: string;
-  githubUrl: string;
-  stars?: number;
-  badge?: string;
-  color: string;
-};
-
-export const featuredProjects: FeaturedProject[] = [
-  {
-    name: "CSC Travels",
-    description: "A full-featured travel booking platform with real-time availability, booking management, and complete payment flow.",
-    tech: ["Next.js", "TypeScript", "Tailwind CSS"],
-    liveUrl: "https://csctravels.vercel.app",
-    githubUrl: "https://github.com/Var6/CSCTravels",
-    badge: "Live",
-    color: "indigo",
-  },
-  {
-    name: "Citizen IMF",
-    description: "Government-grade citizen management portal with authentication, dashboards, and comprehensive data management.",
-    tech: ["Next.js", "TypeScript", "Tailwind CSS"],
-    liveUrl: "https://citizen-imf.vercel.app",
-    githubUrl: "https://github.com/Var6/CitizenIMF",
-    badge: "Live",
-    color: "purple",
-  },
-  {
-    name: "CSC Billing",
-    description: "SaaS billing & invoicing dashboard for small businesses with real-time billing, PDF exports, and client management.",
-    tech: ["Next.js", "TypeScript", "Tailwind CSS"],
-    liveUrl: "https://csc-billing.vercel.app",
-    githubUrl: "https://github.com/Var6/CSCBilling",
-    badge: "Live",
-    color: "cyan",
-  },
-];
 
 const badgeColor: Record<string, string> = {
   Live: "bg-green-100 dark:bg-green-500/15 text-green-700 dark:text-green-400 border-green-300 dark:border-green-500/30",
@@ -76,28 +39,22 @@ export function FeaturedProjectCard({ project, index }: { project: FeaturedProje
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.6, delay: index * 0.12, ease: [0.25, 0.4, 0.25, 1] }}
+      transition={{ duration: 0.6, delay: index * 0.12, ease: "easeOut" }}
       className="card-bg rounded-2xl overflow-hidden hover:border-indigo-300 dark:hover:border-indigo-500/40 transition-all duration-300 group flex flex-col"
     >
-      {/* Color bar header */}
       <div className={`h-1.5 w-full bg-gradient-to-r ${
         project.color === "indigo" ? "from-indigo-500 to-purple-500" :
         project.color === "purple" ? "from-purple-500 to-pink-500" :
         "from-cyan-500 to-blue-500"
       }`} />
-      {/* Card body */}
-      <div className={`p-5 sm:p-6 flex flex-col gap-4 flex-1 bg-gradient-to-br ${cardGradient[project.color]}`}>
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex-1">
-            <div className="flex items-center gap-2 flex-wrap mb-1">
-              <h3 className="text-slate-900 dark:text-white font-bold text-base sm:text-lg">{project.name}</h3>
-              {project.badge && (
-                <span className={`px-2 py-0.5 rounded-full text-xs font-semibold border ${badgeColor[project.badge] ?? ""}`}>
-                  {project.badge}
-                </span>
-              )}
-            </div>
-          </div>
+      <div className={`p-5 sm:p-6 flex flex-col gap-4 flex-1 bg-gradient-to-br ${cardGradient[project.color] ?? ""}`}>
+        <div className="flex items-center gap-2 flex-wrap">
+          <h3 className="text-slate-900 dark:text-white font-bold text-base sm:text-lg">{project.name}</h3>
+          {project.badge && (
+            <span className={`px-2 py-0.5 rounded-full text-xs font-semibold border ${badgeColor[project.badge] ?? ""}`}>
+              {project.badge}
+            </span>
+          )}
         </div>
 
         <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed flex-1">{project.description}</p>
@@ -111,24 +68,14 @@ export function FeaturedProjectCard({ project, index }: { project: FeaturedProje
         </div>
 
         <div className="flex items-center gap-4 pt-1">
-          <a
-            href={project.githubUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-1.5 text-slate-500 hover:text-slate-900 dark:hover:text-white text-xs font-medium transition-colors"
-          >
-            <Github size={14} />
-            Code
+          <a href={project.githubUrl} target="_blank" rel="noopener noreferrer"
+            className="flex items-center gap-1.5 text-slate-500 hover:text-slate-900 dark:hover:text-white text-xs font-medium transition-colors">
+            <Github size={14} /> Code
           </a>
           {project.liveUrl && (
-            <a
-              href={project.liveUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1.5 text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 text-xs font-medium transition-colors"
-            >
-              <ExternalLink size={14} />
-              Live Demo
+            <a href={project.liveUrl} target="_blank" rel="noopener noreferrer"
+              className="flex items-center gap-1.5 text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 text-xs font-medium transition-colors">
+              <ExternalLink size={14} /> Live Demo
             </a>
           )}
         </div>
@@ -148,13 +95,11 @@ export function RepoCard({ repo, index }: { repo: Repo; index: number }) {
 
   return (
     <motion.a
-      href={repo.html_url}
-      target="_blank"
-      rel="noopener noreferrer"
+      href={repo.html_url} target="_blank" rel="noopener noreferrer"
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: 0.5, delay: index * 0.06, ease: [0.25, 0.4, 0.25, 1] }}
+      transition={{ duration: 0.5, delay: index * 0.06, ease: "easeOut" }}
       className="card-bg rounded-2xl p-5 flex flex-col gap-3 hover:border-indigo-300 dark:hover:border-indigo-500/40 transition-all duration-200 group"
     >
       <div className="flex items-start justify-between gap-2">
@@ -177,14 +122,12 @@ export function RepoCard({ repo, index }: { repo: Repo; index: number }) {
         )}
         {repo.stargazers_count > 0 && (
           <span className="flex items-center gap-1 text-xs text-yellow-600 dark:text-yellow-400">
-            <Star size={11} fill="currentColor" />
-            {repo.stargazers_count}
+            <Star size={11} fill="currentColor" /> {repo.stargazers_count}
           </span>
         )}
         {repo.forks_count > 0 && (
           <span className="flex items-center gap-1 text-xs text-slate-400">
-            <GitFork size={11} />
-            {repo.forks_count}
+            <GitFork size={11} /> {repo.forks_count}
           </span>
         )}
       </div>
@@ -197,9 +140,7 @@ export default function Projects({ repos = [] }: { repos?: Repo[] }) {
     <section id="projects" className="py-20 sm:py-24 section-alt">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <AnimatedSection className="text-center mb-14">
-          <p className="text-indigo-600 dark:text-indigo-400 text-xs font-bold tracking-widest uppercase mb-3">
-            Projects
-          </p>
+          <p className="text-indigo-600 dark:text-indigo-400 text-xs font-bold tracking-widest uppercase mb-3">Projects</p>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white">
             Things I&apos;ve <span className="gradient-text">built</span>
           </h2>
@@ -217,9 +158,7 @@ export default function Projects({ repos = [] }: { repos?: Repo[] }) {
         {repos.length > 0 && (
           <>
             <AnimatedSection className="mb-6">
-              <h3 className="text-slate-700 dark:text-slate-300 font-semibold text-sm">
-                More from GitHub
-              </h3>
+              <h3 className="text-slate-700 dark:text-slate-300 font-semibold text-sm">More from GitHub</h3>
             </AnimatedSection>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {repos.map((r, i) => <RepoCard key={r.id} repo={r} index={i} />)}
@@ -232,8 +171,7 @@ export default function Projects({ repos = [] }: { repos?: Repo[] }) {
             href="/projects"
             className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-slate-300 dark:border-white/15 hover:border-indigo-400 dark:hover:border-indigo-500/50 text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-white text-sm font-medium transition-all duration-200"
           >
-            <Github size={16} />
-            View All Projects
+            <Github size={16} /> View All Projects
           </Link>
         </AnimatedSection>
       </div>
