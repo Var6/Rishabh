@@ -1,6 +1,7 @@
 "use client";
-import { Briefcase, GraduationCap, Calendar } from "lucide-react";
-import AnimatedSection from "./AnimatedSection";
+
+import { Briefcase, GraduationCap, Calendar, MapPin } from "lucide-react";
+import { Timeline } from "@/components/ui/timeline";
 
 type ExperienceItem = {
   id: number;
@@ -69,85 +70,74 @@ const experiences: ExperienceItem[] = [
   },
 ];
 
-export default function Experience() {
+function ExperienceCard({ exp }: { exp: ExperienceItem }) {
   return (
-    <section id="experience" className="py-20 sm:py-24 section-base">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6">
-        <AnimatedSection className="text-center mb-14">
-          <p className="text-indigo-600 dark:text-indigo-400 text-xs font-bold tracking-widest uppercase mb-3">
-            Experience
-          </p>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white">
-            My <span className="gradient-text">journey</span>
-          </h2>
-          <p className="text-slate-500 dark:text-slate-400 mt-4 max-w-lg mx-auto text-sm sm:text-base">
-            6+ years of building real products — from college projects to production SaaS.
-          </p>
-        </AnimatedSection>
-
-        <div className="relative">
-          {/* Timeline line */}
-          <div className="absolute left-5 sm:left-8 top-0 bottom-0 w-px bg-gradient-to-b from-indigo-500 via-purple-500 to-transparent opacity-30" />
-
-          <div className="space-y-10">
-            {experiences.map((exp, i) => (
-              <AnimatedSection key={exp.id} delay={i * 0.12} direction="left">
-                <div className="relative pl-14 sm:pl-20">
-                  {/* Icon bubble */}
-                  <div className={`absolute left-0 sm:left-3 top-1 w-10 h-10 rounded-full flex items-center justify-center border-2 z-10
-                    ${exp.type === "work"
-                      ? "bg-indigo-100 dark:bg-indigo-600/20 border-indigo-300 dark:border-indigo-500"
-                      : "bg-purple-100 dark:bg-purple-600/20 border-purple-300 dark:border-purple-500"
-                    }`}>
-                    {exp.type === "work"
-                      ? <Briefcase size={16} className="text-indigo-600 dark:text-indigo-400" />
-                      : <GraduationCap size={16} className="text-purple-600 dark:text-purple-400" />
-                    }
-                  </div>
-
-                  <div className="card-bg rounded-2xl p-5 sm:p-7 hover:border-indigo-300 dark:hover:border-indigo-500/30 transition-all duration-300">
-                    {/* Header */}
-                    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-4">
-                      <div>
-                        <h3 className="font-bold text-slate-900 dark:text-white text-base sm:text-lg">{exp.role}</h3>
-                        <p className="text-indigo-600 dark:text-indigo-400 font-semibold text-sm">{exp.company}</p>
-                      </div>
-                      <div className="flex flex-col items-start sm:items-end gap-1 flex-shrink-0">
-                        <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 text-xs font-medium">
-                          <Calendar size={12} />
-                          {exp.period}
-                        </div>
-                        <span className="text-xs text-slate-400 dark:text-slate-500">{exp.location}</span>
-                      </div>
-                    </div>
-
-                    <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-4">{exp.description}</p>
-
-                    {/* Highlights */}
-                    <ul className="space-y-1.5 mb-4">
-                      {exp.highlights.map((h) => (
-                        <li key={h} className="flex items-start gap-2 text-xs sm:text-sm text-slate-600 dark:text-slate-400">
-                          <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 dark:bg-indigo-400 flex-shrink-0 mt-1.5" />
-                          {h}
-                        </li>
-                      ))}
-                    </ul>
-
-                    {/* Tech pills */}
-                    <div className="flex flex-wrap gap-1.5">
-                      {exp.tech.map((t) => (
-                        <span key={t} className="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/8 text-slate-600 dark:text-slate-400 text-xs">
-                          {t}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </AnimatedSection>
-            ))}
+    <div className="rounded-2xl border border-slate-200 dark:border-white/8 bg-white dark:bg-white/3 p-5 sm:p-7 hover:border-indigo-300 dark:hover:border-indigo-500/30 transition-all duration-300">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-4">
+        <div className="flex items-start gap-3">
+          <div className={`mt-0.5 w-9 h-9 rounded-xl flex items-center justify-center shrink-0 border
+            ${exp.type === "work"
+              ? "bg-indigo-100 dark:bg-indigo-600/20 border-indigo-200 dark:border-indigo-500/30"
+              : "bg-purple-100 dark:bg-purple-600/20 border-purple-200 dark:border-purple-500/30"
+            }`}>
+            {exp.type === "work"
+              ? <Briefcase size={15} className="text-indigo-600 dark:text-indigo-400" />
+              : <GraduationCap size={15} className="text-purple-600 dark:text-purple-400" />
+            }
+          </div>
+          <div>
+            <h3 className="font-bold text-slate-900 dark:text-white text-base sm:text-lg leading-snug">{exp.role}</h3>
+            <p className={`font-semibold text-sm mt-0.5 ${exp.type === "work" ? "text-indigo-600 dark:text-indigo-400" : "text-purple-600 dark:text-purple-400"}`}>
+              {exp.company}
+            </p>
+          </div>
+        </div>
+        <div className="flex flex-row sm:flex-col items-center sm:items-end gap-2 sm:gap-1 ml-12 sm:ml-0 shrink-0">
+          <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 text-xs font-medium">
+            <Calendar size={11} />
+            {exp.period}
+          </div>
+          <div className="flex items-center gap-1 text-slate-400 dark:text-slate-500 text-xs">
+            <MapPin size={10} />
+            {exp.location}
           </div>
         </div>
       </div>
+
+      <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-4 ml-12">{exp.description}</p>
+
+      {/* Highlights */}
+      <ul className="space-y-2 mb-5 ml-12">
+        {exp.highlights.map((h) => (
+          <li key={h} className="flex items-start gap-2 text-xs sm:text-sm text-slate-600 dark:text-slate-400">
+            <span className={`w-1.5 h-1.5 rounded-full shrink-0 mt-1.5 ${exp.type === "work" ? "bg-indigo-500" : "bg-purple-500"}`} />
+            {h}
+          </li>
+        ))}
+      </ul>
+
+      {/* Tech pills */}
+      <div className="flex flex-wrap gap-1.5 ml-12">
+        {exp.tech.map((t) => (
+          <span key={t} className="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/8 text-slate-600 dark:text-slate-400 text-xs">
+            {t}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default function Experience() {
+  const timelineData = experiences.map((exp) => ({
+    title: exp.period.split("–")[0].trim(),
+    content: <ExperienceCard exp={exp} />,
+  }));
+
+  return (
+    <section id="experience" className="section-base overflow-hidden">
+      <Timeline data={timelineData} />
     </section>
   );
 }

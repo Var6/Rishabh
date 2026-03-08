@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Github, Linkedin, Instagram, Mail, Phone } from "lucide-react";
 
 export default function Footer() {
@@ -8,8 +9,17 @@ export default function Footer() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
           <div className="text-center sm:text-left">
-            <Link href="/" className="text-xl font-bold gradient-text tracking-tight mb-1 inline-block">
-              RR.
+            <Link href="/" className="inline-flex items-center gap-2.5 mb-1 group">
+              <div className="relative w-8 h-8 rounded-full overflow-hidden border-2 border-indigo-300 dark:border-indigo-500/50">
+                <Image
+                  src="https://avatars.githubusercontent.com/u/51540591?v=4"
+                  alt="Rishabh Ranjan"
+                  fill
+                  className="object-cover"
+                  sizes="32px"
+                />
+              </div>
+              <span className="text-sm font-bold gradient-text tracking-tight">Rishabh Ranjan</span>
             </Link>
             <p className="text-slate-500 dark:text-slate-500 text-xs">
               © {year} Rishabh Ranjan · Built with Next.js & Tailwind CSS

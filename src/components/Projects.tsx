@@ -78,6 +78,10 @@ export function FeaturedProjectCard({ project, index }: { project: FeaturedProje
               <ExternalLink size={14} /> Live Demo
             </a>
           )}
+          <Link href={`/projects/${project.slug}`}
+            className="ml-auto flex items-center gap-1 text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 text-xs font-medium transition-colors">
+            Details →
+          </Link>
         </div>
       </div>
     </motion.div>

@@ -2,7 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Github, Linkedin, Instagram, Mail, ArrowDown } from "lucide-react";
+import { Github, Linkedin, Instagram, Mail, ArrowDown, Download } from "lucide-react";
 import TypewriterText from "./TypewriterText";
 
 const fadeUp = (delay = 0) => ({
@@ -69,6 +69,14 @@ export default function Hero() {
                 <Mail size={15} />
                 Get In Touch
               </Link>
+              <a
+                href="/Rishabh_Ranjan_CV.pdf"
+                download
+                className="w-full sm:w-auto px-7 py-3.5 rounded-xl border border-slate-300 dark:border-white/15 hover:border-indigo-500 dark:hover:border-indigo-500/50 hover:bg-indigo-50 dark:hover:bg-white/5 text-slate-700 dark:text-slate-300 font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2"
+              >
+                <Download size={15} />
+                Download CV
+              </a>
             </motion.div>
 
             {/* Social links */}
