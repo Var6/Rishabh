@@ -1,5 +1,5 @@
 "use client";
-import { useRef, MouseEvent, ReactNode } from "react";
+import { useRef, MouseEvent, ReactNode, useEffect, useState } from "react";
 
 interface Props {
   children: ReactNode;
@@ -8,8 +8,14 @@ interface Props {
 
 export default function TiltCard({ children, className = "" }: Props) {
   const cardRef = useRef<HTMLDivElement>(null);
+  const [isTouch, setIsTouch] = useState(true); // default true to avoid SSR mismatch
+
+  useEffect(() => {
+    setIsTouch(!window.matchMedia("(pointer: fine)").matches);
+  }, []);
 
   const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
+    if (isTouch) return;
     const card = cardRef.current;
     if (!card) return;
     const { left, top, width, height } = card.getBoundingClientRect();
@@ -19,6 +25,7 @@ export default function TiltCard({ children, className = "" }: Props) {
   };
 
   const handleMouseLeave = () => {
+    if (isTouch) return;
     const card = cardRef.current;
     if (!card) return;
     card.style.transform = "perspective(800px) rotateY(0deg) rotateX(0deg) translateZ(0px)";
@@ -30,7 +37,7 @@ export default function TiltCard({ children, className = "" }: Props) {
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       className={className}
-      style={{ transition: "transform 0.15s ease", transformStyle: "preserve-3d" }}
+      style={isTouch ? undefined : { transition: "transform 0.15s ease", transformStyle: "preserve-3d" }}
     >
       {children}
     </div>

@@ -1,7 +1,17 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import ClientProviders from "@/components/ClientProviders";
 import "./globals.css";
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f8fafc" },
+    { media: "(prefers-color-scheme: dark)", color: "#0a0a0f" },
+  ],
+};
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -84,10 +94,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`scroll-smooth ${inter.variable}`} suppressHydrationWarning>
-      <head>
-        <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f8fafc" />
-        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0a0a0f" />
-      </head>
+      <head />
       <body className="antialiased bg-white dark:bg-[#0a0a0f] text-slate-900 dark:text-slate-100 transition-colors duration-300">
         <script
           type="application/ld+json"

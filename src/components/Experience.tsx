@@ -93,7 +93,7 @@ function ExperienceCard({ exp }: { exp: ExperienceItem }) {
             </p>
           </div>
         </div>
-        <div className="flex flex-row sm:flex-col items-center sm:items-end gap-2 sm:gap-1 ml-12 sm:ml-0 shrink-0">
+        <div className="flex flex-row sm:flex-col items-center sm:items-end gap-2 sm:gap-1 ml-0 sm:ml-0 shrink-0">
           <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 text-xs font-medium">
             <Calendar size={11} />
             {exp.period}
@@ -105,10 +105,10 @@ function ExperienceCard({ exp }: { exp: ExperienceItem }) {
         </div>
       </div>
 
-      <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-4 ml-12">{exp.description}</p>
+      <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-4 ml-0 sm:ml-12">{exp.description}</p>
 
       {/* Highlights */}
-      <ul className="space-y-2 mb-5 ml-12">
+      <ul className="space-y-2 mb-5 ml-0 sm:ml-12">
         {exp.highlights.map((h) => (
           <li key={h} className="flex items-start gap-2 text-xs sm:text-sm text-slate-600 dark:text-slate-400">
             <span className={`w-1.5 h-1.5 rounded-full shrink-0 mt-1.5 ${exp.type === "work" ? "bg-indigo-500" : "bg-purple-500"}`} />
@@ -118,7 +118,7 @@ function ExperienceCard({ exp }: { exp: ExperienceItem }) {
       </ul>
 
       {/* Tech pills */}
-      <div className="flex flex-wrap gap-1.5 ml-12">
+      <div className="flex flex-wrap gap-1.5 ml-0 sm:ml-12">
         {exp.tech.map((t) => (
           <span key={t} className="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/8 text-slate-600 dark:text-slate-400 text-xs">
             {t}

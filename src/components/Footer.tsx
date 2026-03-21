@@ -47,7 +47,7 @@ export default function Footer() {
                 </a>
               ))}
             </div>
-            <div className="flex items-center gap-4 text-xs text-slate-400">
+            <div className="flex flex-wrap items-center justify-center sm:justify-end gap-x-4 gap-y-2 text-xs text-slate-400">
               <Link href="/about" className="hover:text-indigo-600 dark:hover:text-white transition-colors">About</Link>
               <Link href="/projects" className="hover:text-indigo-600 dark:hover:text-white transition-colors">Projects</Link>
               <Link href="/experience" className="hover:text-indigo-600 dark:hover:text-white transition-colors">Experience</Link>

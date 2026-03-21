@@ -205,7 +205,7 @@ export default function Contact() {
                   <button
                     type="submit"
                     disabled={status === "sending"}
-                    className="self-start inline-flex items-center gap-2 px-7 py-3.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-60 disabled:cursor-not-allowed text-white text-sm font-semibold transition-all duration-200 glow-indigo"
+                    className="w-full sm:w-auto sm:self-start inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-60 disabled:cursor-not-allowed text-white text-sm font-semibold transition-all duration-200 glow-indigo"
                   >
                     {status === "sending" ? (
                       <>
