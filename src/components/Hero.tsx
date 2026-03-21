@@ -36,7 +36,10 @@ export default function Hero() {
           <div className="flex-1 text-center lg:text-left w-full">
             <motion.div {...fadeUp(0.1)}>
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-50 dark:bg-indigo-600/15 border border-indigo-200 dark:border-indigo-500/30 text-indigo-600 dark:text-indigo-400 text-xs font-semibold mb-6">
-                <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping-slow absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
+                </span>
                 Available for freelance work
               </div>
             </motion.div>
@@ -61,13 +64,13 @@ export default function Hero() {
             <motion.div {...fadeUp(0.5)} className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 mb-10">
               <Link
                 href="/projects"
-                className="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm transition-all duration-200 glow-indigo flex items-center justify-center gap-2"
+                className="btn-shimmer w-full sm:w-auto px-7 py-3.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm transition-all duration-200 glow-indigo flex items-center justify-center gap-2"
               >
                 View My Work
               </Link>
               <Link
                 href="/contact"
-                className="w-full sm:w-auto px-7 py-3.5 rounded-xl border border-slate-300 dark:border-white/15 hover:border-indigo-500 dark:hover:border-indigo-500/50 hover:bg-indigo-50 dark:hover:bg-white/5 text-slate-700 dark:text-slate-300 font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2"
+                className="btn-shimmer w-full sm:w-auto px-7 py-3.5 rounded-xl border border-slate-300 dark:border-white/15 hover:border-indigo-500 dark:hover:border-indigo-500/50 hover:bg-indigo-50 dark:hover:bg-white/5 text-slate-700 dark:text-slate-300 font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2"
               >
                 <Mail size={15} />
                 Get In Touch
@@ -75,7 +78,7 @@ export default function Hero() {
               <a
                 href="/Rishabh_Ranjan_CV.pdf"
                 download
-                className="w-full sm:w-auto px-7 py-3.5 rounded-xl border border-slate-300 dark:border-white/15 hover:border-indigo-500 dark:hover:border-indigo-500/50 hover:bg-indigo-50 dark:hover:bg-white/5 text-slate-700 dark:text-slate-300 font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2"
+                className="btn-download w-full sm:w-auto px-7 py-3.5 rounded-xl border border-slate-300 dark:border-white/15 hover:border-indigo-500 dark:hover:border-indigo-500/50 hover:bg-indigo-50 dark:hover:bg-white/5 text-slate-700 dark:text-slate-300 font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2"
               >
                 <Download size={15} />
                 Download CV

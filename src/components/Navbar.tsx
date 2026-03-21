@@ -81,7 +81,7 @@ export default function Navbar() {
           </a>
           <Link
             href="/contact"
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium transition-colors duration-200"
+            className="btn-shimmer inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium transition-colors duration-200"
           >
             Hire Me
           </Link>

@@ -42,3 +42,49 @@ body {
 .section-base {
   @apply bg-white dark:bg-[#0a0a0f];
 }
+
+/* ── Custom cursor: hide default on fine-pointer devices ── */
+@media (pointer: fine) {
+  *, *::before, *::after { cursor: none !important; }
+}
+
+/* ── Shimmer sweep on primary buttons ── */
+.btn-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.btn-shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.22) 50%,
+    transparent 70%
+  );
+  transform: translateX(-120%);
+  transition: none;
+}
+.btn-shimmer:hover::after {
+  animation: shimmer-sweep 0.55s ease forwards;
+}
+@keyframes shimmer-sweep {
+  to { transform: translateX(120%); }
+}
+
+/* ── Pulse-ring on CTA pill ── */
+@keyframes ping-slow {
+  75%, 100% { transform: scale(1.6); opacity: 0; }
+}
+.animate-ping-slow { animation: ping-slow 1.8s cubic-bezier(0,0,0.2,1) infinite; }
+
+/* ── Download button bounce-scale on hover ── */
+.btn-download:hover { animation: wiggle 0.4s ease; }
+@keyframes wiggle {
+  0%   { transform: scale(1) rotate(0deg); }
+  25%  { transform: scale(1.08) rotate(-3deg); }
+  50%  { transform: scale(1.1) rotate(3deg); }
+  75%  { transform: scale(1.06) rotate(-1deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
