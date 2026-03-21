@@ -1,6 +1,7 @@
 "use client";
 import { Globe, Smartphone, Zap, Database, LayoutDashboard, Bot } from "lucide-react";
 import AnimatedSection from "./AnimatedSection";
+import TiltCard from "./TiltCard";
 import Link from "next/link";
 
 const services = [
@@ -73,13 +74,15 @@ export default function Services() {
             const Icon = svc.icon;
             return (
               <AnimatedSection key={svc.title} delay={i * 0.08}>
-                <div className={`card-bg rounded-2xl p-6 sm:p-7 flex flex-col gap-4 transition-all duration-300 h-full ${colors.border}`}>
-                  <div className={`w-11 h-11 rounded-xl ${colors.bg} flex items-center justify-center`}>
-                    <Icon size={22} className={colors.text} />
+                <TiltCard className="h-full">
+                  <div className={`card-bg rounded-2xl p-6 sm:p-7 flex flex-col gap-4 transition-all duration-300 h-full ${colors.border}`}>
+                    <div className={`w-11 h-11 rounded-xl ${colors.bg} flex items-center justify-center`}>
+                      <Icon size={22} className={colors.text} />
+                    </div>
+                    <h3 className="text-slate-900 dark:text-white font-bold text-base sm:text-lg">{svc.title}</h3>
+                    <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">{svc.description}</p>
                   </div>
-                  <h3 className="text-slate-900 dark:text-white font-bold text-base sm:text-lg">{svc.title}</h3>
-                  <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">{svc.description}</p>
-                </div>
+                </TiltCard>
               </AnimatedSection>
             );
           })}

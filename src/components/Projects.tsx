@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { ExternalLink, Github, Star, GitFork } from "lucide-react";
 import Link from "next/link";
 import AnimatedSection from "./AnimatedSection";
+import TiltCard from "./TiltCard";
 import { featuredProjects } from "@/lib/projects-data";
 import type { FeaturedProject } from "@/lib/projects-data";
 
@@ -40,7 +41,10 @@ export function FeaturedProjectCard({ project, index }: { project: FeaturedProje
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-60px" }}
       transition={{ duration: 0.6, delay: index * 0.12, ease: "easeOut" }}
-      className="card-bg rounded-2xl overflow-hidden hover:border-indigo-300 dark:hover:border-indigo-500/40 transition-all duration-300 group flex flex-col"
+    >
+    <TiltCard className="flex flex-col h-full">
+    <div
+      className="card-bg rounded-2xl overflow-hidden hover:border-indigo-300 dark:hover:border-indigo-500/40 transition-all duration-300 group flex flex-col h-full"
     >
       <div className={`h-1.5 w-full bg-gradient-to-r ${
         project.color === "indigo" ? "from-indigo-500 to-purple-500" :
@@ -84,6 +88,8 @@ export function FeaturedProjectCard({ project, index }: { project: FeaturedProje
           </Link>
         </div>
       </div>
+    </div>
+    </TiltCard>
     </motion.div>
   );
 }
