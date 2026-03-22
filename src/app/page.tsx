@@ -5,34 +5,44 @@ import Services from "@/components/Services";
 import Projects from "@/components/Projects";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
-import { Repo } from "@/components/Projects";
+import { fetchGitHubProfile, fetchAllRepos, totalStars, repoStatsMap } from "@/lib/github";
+import { featuredProjects, extraProjects } from "@/lib/projects-data";
+import type { GitHubRepo } from "@/lib/github";
 
-async function getRepos(): Promise<Repo[]> {
-  try {
-    const headers: Record<string, string> = { Accept: "application/vnd.github.v3+json", "User-Agent": "rishabh-portfolio" };
-    if (process.env.GITHUB_TOKEN) headers.Authorization = `token ${process.env.GITHUB_TOKEN}`;
-    const res = await fetch("https://api.github.com/users/Var6/repos?sort=updated&per_page=6&type=public", {
-      headers,
-      next: { revalidate: 3600 },
-    });
-    if (!res.ok) return [];
-    const data = await res.json();
-    return data.slice(0, 6);
-  } catch {
-    return [];
-  }
+function repoName(githubUrl: string) {
+  return githubUrl.split("/").pop()?.toLowerCase() ?? "";
 }
 
 export default async function Home() {
-  const repos = await getRepos();
+  const [profile, allRepos] = await Promise.all([
+    fetchGitHubProfile(),
+    fetchAllRepos(),
+  ]);
+
+  const statsMap = repoStatsMap(allRepos);
+
+  const githubStats = profile
+    ? { repos: profile.public_repos, followers: profile.followers, stars: totalStars(allRepos) }
+    : undefined;
+
+  // Recent repos for the Projects section (exclude portfolio + curated)
+  const knownNames = [...featuredProjects, ...extraProjects].map((p) =>
+    p.name.toLowerCase().replace(/\s/g, "")
+  );
+  const dynamicRepos: GitHubRepo[] = allRepos
+    .filter((r) => !knownNames.includes(r.name.toLowerCase().replace(/\s/g, "")) && r.name !== "portfolio")
+    .slice(0, 6);
 
   return (
     <main className="min-h-screen">
       <Navbar />
       <Hero />
-      <About />
+      <About githubStats={githubStats} />
       <Services />
-      <Projects repos={repos} />
+      <Projects
+        repos={dynamicRepos}
+        statsMap={statsMap}
+      />
       <Contact />
       <Footer />
     </main>

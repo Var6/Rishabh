@@ -1,15 +1,20 @@
 "use client";
-import { MapPin, Calendar, Code2, Users } from "lucide-react";
+import { MapPin, Calendar, Code2, Star } from "lucide-react";
 import AnimatedSection from "./AnimatedSection";
 
-const stats = [
-  { icon: Code2, label: "Projects Shipped", value: "8+" },
-  { icon: Calendar, label: "Years Experience", value: "6+" },
-  { icon: Users, label: "Happy Clients", value: "10+" },
-  { icon: MapPin, label: "Location", value: "Patna, IN" },
-];
+type GitHubStats = {
+  repos: number;
+  followers: number;
+  stars: number;
+};
 
-export default function About() {
+export default function About({ githubStats }: { githubStats?: GitHubStats }) {
+  const stats = [
+    { icon: Code2, label: "Public Repos", value: githubStats ? `${githubStats.repos}` : "8+" },
+    { icon: Calendar, label: "Years Experience", value: "6+" },
+    { icon: Star, label: "GitHub Stars", value: githubStats ? `${githubStats.stars}` : "—" },
+    { icon: MapPin, label: "Location", value: "Patna, IN" },
+  ];
   return (
     <section id="about" className="py-20 sm:py-24 section-alt">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">

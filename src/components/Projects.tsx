@@ -34,7 +34,17 @@ const cardGradient: Record<string, string> = {
   cyan: "from-cyan-500/10 to-transparent dark:from-cyan-600/10",
 };
 
-export function FeaturedProjectCard({ project, index }: { project: FeaturedProject; index: number }) {
+export function FeaturedProjectCard({
+  project,
+  index,
+  stars,
+  forks,
+}: {
+  project: FeaturedProject;
+  index: number;
+  stars?: number;
+  forks?: number;
+}) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 40 }}
@@ -71,7 +81,7 @@ export function FeaturedProjectCard({ project, index }: { project: FeaturedProje
           ))}
         </div>
 
-        <div className="flex items-center gap-4 pt-1">
+        <div className="flex items-center gap-4 pt-1 flex-wrap">
           <a href={project.githubUrl} target="_blank" rel="noopener noreferrer"
             className="flex items-center gap-1.5 text-slate-500 hover:text-slate-900 dark:hover:text-white text-xs font-medium transition-colors">
             <Github size={14} /> Code
@@ -81,6 +91,16 @@ export function FeaturedProjectCard({ project, index }: { project: FeaturedProje
               className="flex items-center gap-1.5 text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 text-xs font-medium transition-colors">
               <ExternalLink size={14} /> Live Demo
             </a>
+          )}
+          {(stars !== undefined && stars > 0) && (
+            <span className="flex items-center gap-1 text-yellow-600 dark:text-yellow-400 text-xs">
+              <Star size={12} fill="currentColor" /> {stars}
+            </span>
+          )}
+          {(forks !== undefined && forks > 0) && (
+            <span className="flex items-center gap-1 text-slate-400 text-xs">
+              <GitFork size={12} /> {forks}
+            </span>
           )}
           <Link href={`/projects/${project.slug}`}
             className="ml-auto flex items-center gap-1 text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 text-xs font-medium transition-colors">
@@ -145,7 +165,13 @@ export function RepoCard({ repo, index }: { repo: Repo; index: number }) {
   );
 }
 
-export default function Projects({ repos = [] }: { repos?: Repo[] }) {
+export default function Projects({
+  repos = [],
+  statsMap = {},
+}: {
+  repos?: Repo[];
+  statsMap?: Record<string, { stars: number; forks: number }>;
+}) {
   return (
     <section id="projects" className="py-20 sm:py-24 section-alt">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
@@ -160,9 +186,13 @@ export default function Projects({ repos = [] }: { repos?: Repo[] }) {
         </AnimatedSection>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
-          {featuredProjects.map((p, i) => (
-            <FeaturedProjectCard key={p.name} project={p} index={i} />
-          ))}
+          {featuredProjects.map((p, i) => {
+            const key = p.githubUrl.split("/").pop()?.toLowerCase() ?? "";
+            const s = statsMap[key];
+            return (
+              <FeaturedProjectCard key={p.name} project={p} index={i} stars={s?.stars} forks={s?.forks} />
+            );
+          })}
         </div>
 
         {repos.length > 0 && (

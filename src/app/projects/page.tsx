@@ -1,33 +1,19 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { FeaturedProjectCard, RepoCard } from "@/components/Projects";
-import type { Repo } from "@/components/Projects";
 import { featuredProjects, extraProjects } from "@/lib/projects-data";
 import AnimatedSection from "@/components/AnimatedSection";
 import type { Metadata } from "next";
+import { fetchAllRepos, repoStatsMap } from "@/lib/github";
 
 export const metadata: Metadata = {
   title: "Projects — Rishabh Ranjan",
   description: "All projects built by Rishabh Ranjan — web apps, mobile apps, SaaS platforms, and AI tools.",
 };
 
-async function getRepos(): Promise<Repo[]> {
-  try {
-    const headers: Record<string, string> = { Accept: "application/vnd.github.v3+json", "User-Agent": "rishabh-portfolio" };
-    if (process.env.GITHUB_TOKEN) headers.Authorization = `token ${process.env.GITHUB_TOKEN}`;
-    const res = await fetch("https://api.github.com/users/Var6/repos?sort=updated&per_page=30&type=public", {
-      headers,
-      next: { revalidate: 3600 },
-    });
-    if (!res.ok) return [];
-    return res.json();
-  } catch {
-    return [];
-  }
-}
-
 export default async function ProjectsPage() {
-  const allRepos = await getRepos();
+  const allRepos = await fetchAllRepos();
+  const statsMap = repoStatsMap(allRepos);
 
   // Filter out repos already shown in curated lists
   const knownNames = [...featuredProjects, ...extraProjects].map((p) =>
@@ -49,7 +35,7 @@ export default async function ProjectsPage() {
               Things I&apos;ve <span className="gradient-text">built</span>
             </h1>
             <p className="text-slate-500 dark:text-slate-400 max-w-2xl mx-auto text-base sm:text-lg">
-              From SaaS platforms to AI tools — {allRepos.length > 0 ? allRepos.length : "8"}+ public repos on GitHub.
+              From SaaS platforms to AI tools — {allRepos.length > 0 ? `${allRepos.length}` : "8"}+ public repos on GitHub.
             </p>
           </div>
         </div>
@@ -64,7 +50,11 @@ export default async function ProjectsPage() {
               </h2>
             </AnimatedSection>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-14">
-              {featuredProjects.map((p, i) => <FeaturedProjectCard key={p.name} project={p} index={i} />)}
+              {featuredProjects.map((p, i) => {
+                const key = p.githubUrl.split("/").pop()?.toLowerCase() ?? "";
+                const s = statsMap[key];
+                return <FeaturedProjectCard key={p.name} project={p} index={i} stars={s?.stars} forks={s?.forks} />;
+              })}
             </div>
 
             {/* More */}
@@ -75,7 +65,11 @@ export default async function ProjectsPage() {
               </h2>
             </AnimatedSection>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-14">
-              {extraProjects.map((p, i) => <FeaturedProjectCard key={p.name} project={p} index={i} />)}
+              {extraProjects.map((p, i) => {
+                const key = p.githubUrl.split("/").pop()?.toLowerCase() ?? "";
+                const s = statsMap[key];
+                return <FeaturedProjectCard key={p.name} project={p} index={i} stars={s?.stars} forks={s?.forks} />;
+              })}
             </div>
 
             {/* Dynamic GitHub repos */}
