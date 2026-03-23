@@ -5,10 +5,12 @@ const CustomCursor           = dynamic(() => import("./CustomCursor"),          
 const ScrollProgress         = dynamic(() => import("./ScrollProgress"),         { ssr: false });
 const BackgroundScene3D      = dynamic(() => import("./BackgroundScene3D"),      { ssr: false });
 const BackgroundScene3DRight = dynamic(() => import("./BackgroundScene3DRight"), { ssr: false });
+const PageLoader             = dynamic(() => import("./PageLoader"),             { ssr: false });
 
 export default function ClientProviders() {
   return (
     <>
+      <PageLoader />
       <CustomCursor />
       <ScrollProgress />
       <BackgroundScene3D />
