@@ -92,23 +92,23 @@ function Crystal({ scroll }: { scroll: number }) {
 
   useFrame((state) => {
     const t = state.clock.getElapsedTime();
-    const s = scroll * 0.0008;
+    const s = scroll * 0.0022;   // ← was 0.0008 — 2.75× more responsive
 
     if (knotRef.current) {
       knotRef.current.rotation.x = t * 0.09 + s;
       knotRef.current.rotation.y = t * 0.13 + s * 0.6;
     }
     if (cageRef.current) {
-      cageRef.current.rotation.x = -t * 0.04 + s * 0.3;
-      cageRef.current.rotation.y =  t * 0.07;
+      cageRef.current.rotation.x = -t * 0.04 + s * 0.5;
+      cageRef.current.rotation.y =  t * 0.07 + s * 0.3;
     }
     if (ring1Ref.current) {
-      ring1Ref.current.rotation.z = t * 0.08;
-      ring1Ref.current.rotation.x = Math.PI / 3 + s * 0.4;
+      ring1Ref.current.rotation.z = t * 0.08 + s * 0.6;
+      ring1Ref.current.rotation.x = Math.PI / 3 + s * 0.7;
     }
     if (ring2Ref.current) {
-      ring2Ref.current.rotation.y = -t * 0.06;
-      ring2Ref.current.rotation.z =  t * 0.05 + s * 0.2;
+      ring2Ref.current.rotation.y = -t * 0.06 + s * 0.4;
+      ring2Ref.current.rotation.z =  t * 0.05 + s * 0.3;
     }
   });
 
@@ -151,15 +151,19 @@ function Crystal({ scroll }: { scroll: number }) {
   );
 }
 
-/* ─── Root scene — drifts upward on scroll ──────────────────────── */
+/* ─── Root scene — drifts upward + right on scroll ─────────────── */
 function Scene({ scroll }: { scroll: number }) {
   const groupRef = useRef<THREE.Group>(null);
 
   useFrame(() => {
     if (!groupRef.current) return;
-    // gentle upward drift as user scrolls
+    // upward drift + slight rightward swing + Z tilt as user scrolls
     groupRef.current.position.y =
-      THREE.MathUtils.lerp(groupRef.current.position.y, -scroll * 0.0012, 0.05);
+      THREE.MathUtils.lerp(groupRef.current.position.y, -scroll * 0.003, 0.06);
+    groupRef.current.position.x =
+      THREE.MathUtils.lerp(groupRef.current.position.x,  scroll * 0.0008, 0.06);
+    groupRef.current.rotation.z =
+      THREE.MathUtils.lerp(groupRef.current.rotation.z,  scroll * 0.0004, 0.05);
   });
 
   return (

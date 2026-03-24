@@ -94,25 +94,25 @@ function Gyroscope({ scroll }: { scroll: number }) {
 
   useFrame((state) => {
     const t = state.clock.getElapsedTime();
-    const s = scroll * 0.0009;
+    const s = scroll * 0.0024;   // ← was 0.0009 — 2.7× more responsive
 
     if (coreRef.current) {
       coreRef.current.rotation.x = t * 0.18 + s;
       coreRef.current.rotation.y = t * 0.22 + s * 0.7;
     }
     if (ringXRef.current) {
-      ringXRef.current.rotation.x = t * 0.5 + s * 1.2; // fast X spin
+      ringXRef.current.rotation.x = t * 0.5  + s * 1.5;
     }
     if (ringYRef.current) {
-      ringYRef.current.rotation.y = t * 0.38 + s * 0.8; // medium Y spin
+      ringYRef.current.rotation.y = t * 0.38 + s * 1.1;
     }
     if (ringZRef.current) {
-      ringZRef.current.rotation.z = -t * 0.28 + s * 0.5; // counter-rotate Z
-      ringZRef.current.rotation.x = Math.PI / 4;
+      ringZRef.current.rotation.z = -t * 0.28 + s * 0.7;
+      ringZRef.current.rotation.x = Math.PI / 4 + s * 0.4;
     }
     if (cageRef.current) {
-      cageRef.current.rotation.x = -t * 0.06;
-      cageRef.current.rotation.y =  t * 0.09 + s * 0.3;
+      cageRef.current.rotation.x = -t * 0.06 + s * 0.5;
+      cageRef.current.rotation.y =  t * 0.09 + s * 0.4;
     }
   });
 
@@ -161,15 +161,19 @@ function Gyroscope({ scroll }: { scroll: number }) {
   );
 }
 
-/* ─── Root scene — drifts downward on scroll ────────────────────── */
+/* ─── Root scene — drifts downward + leftward on scroll ─────────── */
 function Scene({ scroll }: { scroll: number }) {
   const groupRef = useRef<THREE.Group>(null);
 
   useFrame(() => {
     if (!groupRef.current) return;
-    // drifts DOWN (opposite to left scene which drifts up)
+    // downward drift + slight leftward swing + opposite Z tilt
     groupRef.current.position.y =
-      THREE.MathUtils.lerp(groupRef.current.position.y, scroll * 0.0012, 0.05);
+      THREE.MathUtils.lerp(groupRef.current.position.y,  scroll * 0.003,  0.06);
+    groupRef.current.position.x =
+      THREE.MathUtils.lerp(groupRef.current.position.x, -scroll * 0.0008, 0.06);
+    groupRef.current.rotation.z =
+      THREE.MathUtils.lerp(groupRef.current.rotation.z, -scroll * 0.0004, 0.05);
   });
 
   return (
