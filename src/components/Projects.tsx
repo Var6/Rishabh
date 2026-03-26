@@ -173,11 +173,11 @@ export default function Projects({
   statsMap?: Record<string, { stars: number; forks: number }>;
 }) {
   return (
-    <section id="projects" className="py-20 sm:py-24 section-alt">
+    <section id="projects" className="py-16 sm:py-24 section-alt">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
-        <AnimatedSection className="text-center mb-14">
+        <AnimatedSection className="text-center mb-10 sm:mb-14">
           <p className="text-indigo-600 dark:text-indigo-400 text-xs font-bold tracking-widest uppercase mb-3">Projects</p>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white">
+          <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white">
             Things I&apos;ve <span className="gradient-text">built</span>
           </h2>
           <p className="text-slate-500 dark:text-slate-400 mt-4 max-w-xl mx-auto text-sm sm:text-base">
@@ -185,7 +185,7 @@ export default function Projects({
           </p>
         </AnimatedSection>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 mb-10">
           {featuredProjects.map((p, i) => {
             const key = p.githubUrl.split("/").pop()?.toLowerCase() ?? "";
             const s = statsMap[key];

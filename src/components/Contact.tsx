@@ -70,13 +70,13 @@ export default function Contact() {
   ];
 
   return (
-    <section id="contact" className="py-20 sm:py-24 section-base">
+    <section id="contact" className="py-16 sm:py-24 section-base">
       <div className="max-w-5xl mx-auto px-4 sm:px-6">
-        <AnimatedSection className="text-center mb-14">
+        <AnimatedSection className="text-center mb-10 sm:mb-14">
           <p className="text-indigo-600 dark:text-indigo-400 text-xs font-bold tracking-widest uppercase mb-3">
             Contact
           </p>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white">
+          <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white">
             Let&apos;s <span className="gradient-text">work together</span>
           </h2>
           <p className="text-slate-500 dark:text-slate-400 mt-4 max-w-lg mx-auto text-sm sm:text-base">
@@ -84,7 +84,7 @@ export default function Contact() {
           </p>
         </AnimatedSection>
 
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-10">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 sm:gap-8 lg:gap-10">
           {/* Info sidebar */}
           <AnimatedSection className="lg:col-span-2 flex flex-col gap-3" direction="left">
             {infoCards.map((card) => (

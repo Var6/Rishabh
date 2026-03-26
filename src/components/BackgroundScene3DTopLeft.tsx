@@ -1,8 +1,9 @@
 "use client";
-import { useRef, useMemo, useEffect, useState } from "react";
+import { useRef, useMemo } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Float, MeshDistortMaterial } from "@react-three/drei";
 import * as THREE from "three";
+import useMobileSceneConfig from "./useMobileSceneConfig";
 
 /* ─── Nucleus — rose/pink distorted icosahedron ─────────────────── */
 function Nucleus({ scroll }: { scroll: number }) {
@@ -117,9 +118,9 @@ function OrbitalRing({
 }
 
 /* ─── Scattered rose/amber particles ────────────────────────────── */
-function AtomParticles({ scroll }: { scroll: number }) {
+function AtomParticles({ scroll, isMobile }: { scroll: number; isMobile: boolean }) {
   const ref   = useRef<THREE.Points>(null);
-  const count = 130;
+  const count = isMobile ? 58 : 130;
 
   const positions = useMemo(() => {
     const arr = new Float32Array(count * 3);
@@ -150,7 +151,7 @@ function AtomParticles({ scroll }: { scroll: number }) {
   );
 }
 
-function AtomScene({ scroll }: { scroll: number }) {
+function AtomScene({ scroll, isMobile }: { scroll: number; isMobile: boolean }) {
   const groupRef = useRef<THREE.Group>(null);
 
   useFrame(() => {
@@ -169,7 +170,7 @@ function AtomScene({ scroll }: { scroll: number }) {
       <pointLight position={[-3, -2,  3]} intensity={3.5} color="#fb923c" />
       <pointLight position={[ 0, -4,  2]} intensity={2}   color="#fbbf24" />
 
-      <Float speed={1.1} rotationIntensity={0.1} floatIntensity={0.5}>
+      <Float speed={isMobile ? 1.4 : 1.1} rotationIntensity={isMobile ? 0.15 : 0.1} floatIntensity={isMobile ? 0.62 : 0.5}>
         <Nucleus scroll={scroll} />
 
         {/* Three orbital rings — different axes */}
@@ -183,43 +184,34 @@ function AtomScene({ scroll }: { scroll: number }) {
         <Electron radius={1.8}  speed={0.7} tiltX={Math.PI / 2} tiltZ={0} color="#fed7aa" scroll={scroll} />
       </Float>
 
-      <AtomParticles scroll={scroll} />
+      <AtomParticles scroll={scroll} isMobile={isMobile} />
     </group>
   );
 }
 
-/* ─── Wrapper — fixed top-left corner, desktop only ─────────────── */
 export default function BackgroundScene3DTopLeft() {
-  const [scroll,  setScroll]  = useState(0);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    if (!window.matchMedia("(pointer: fine)").matches) return;
-    setMounted(true);
-    const onScroll = () => setScroll(window.scrollY);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  const { mounted, isMobile, scroll } = useMobileSceneConfig();
 
   if (!mounted) return null;
 
   return (
     <div
-      className="fixed pointer-events-none z-0 hidden sm:block opacity-30 dark:opacity-50"
+      className="fixed pointer-events-none z-0 opacity-20 dark:opacity-40 sm:opacity-30 sm:dark:opacity-50"
       style={{
-        top: 0,
-        left: 0,
-        width: 360,
-        height: 360,
-        transform: "translate(-95px, -95px)",
+        top: isMobile ? 72 : 0,
+        left: isMobile ? -54 : 0,
+        width: isMobile ? 180 : 360,
+        height: isMobile ? 180 : 360,
+        transform: isMobile ? "translate(0, 0)" : "translate(-95px, -95px)",
       }}
     >
       <Canvas
-        camera={{ position: [0, 0, 5.5], fov: 46 }}
-        gl={{ antialias: true, alpha: true }}
+        camera={{ position: [0, 0, isMobile ? 6.2 : 5.5], fov: isMobile ? 56 : 46 }}
+        dpr={isMobile ? [1, 1.2] : [1, 1.6]}
+        gl={{ antialias: !isMobile, alpha: true }}
         style={{ width: "100%", height: "100%" }}
       >
-        <AtomScene scroll={scroll} />
+        <AtomScene scroll={scroll} isMobile={isMobile} />
       </Canvas>
     </div>
   );

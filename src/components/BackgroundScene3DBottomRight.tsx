@@ -1,8 +1,9 @@
 "use client";
-import { useRef, useMemo, useEffect, useState } from "react";
+import { useRef, useMemo } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Float, MeshDistortMaterial } from "@react-three/drei";
 import * as THREE from "three";
+import useMobileSceneConfig from "./useMobileSceneConfig";
 
 /* ─── Helix: stacked tori with progressive tilt (DNA-like) ──────── */
 function HelixStack({ scroll }: { scroll: number }) {
@@ -89,9 +90,9 @@ function DNACage({ scroll }: { scroll: number }) {
 }
 
 /* ─── Emerald particle cloud ─────────────────────────────────────── */
-function EmeraldParticles({ scroll }: { scroll: number }) {
+function EmeraldParticles({ scroll, isMobile }: { scroll: number; isMobile: boolean }) {
   const ref   = useRef<THREE.Points>(null);
-  const count = 140;
+  const count = isMobile ? 60 : 140;
 
   const positions = useMemo(() => {
     const arr = new Float32Array(count * 3);
@@ -122,7 +123,7 @@ function EmeraldParticles({ scroll }: { scroll: number }) {
   );
 }
 
-function DNAScene({ scroll }: { scroll: number }) {
+function DNAScene({ scroll, isMobile }: { scroll: number; isMobile: boolean }) {
   const groupRef = useRef<THREE.Group>(null);
 
   useFrame(() => {
@@ -143,49 +144,40 @@ function DNAScene({ scroll }: { scroll: number }) {
       <pointLight position={[ 3, -2,  3]} intensity={3.5} color="#34d399" />
       <pointLight position={[ 0,  4,  2]} intensity={2.5} color="#6ee7b7" />
 
-      <Float speed={0.9} rotationIntensity={0.12} floatIntensity={0.48}>
+      <Float speed={isMobile ? 1.15 : 0.9} rotationIntensity={isMobile ? 0.18 : 0.12} floatIntensity={isMobile ? 0.58 : 0.48}>
         <DNACore  scroll={scroll} />
         <DNACage  scroll={scroll} />
         <HelixStack scroll={scroll} />
       </Float>
 
-      <EmeraldParticles scroll={scroll} />
+      <EmeraldParticles scroll={scroll} isMobile={isMobile} />
     </group>
   );
 }
 
-/* ─── Wrapper — fixed bottom-right corner, desktop only ─────────── */
 export default function BackgroundScene3DBottomRight() {
-  const [scroll,  setScroll]  = useState(0);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    if (!window.matchMedia("(pointer: fine)").matches) return;
-    setMounted(true);
-    const onScroll = () => setScroll(window.scrollY);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  const { mounted, isMobile, scroll } = useMobileSceneConfig();
 
   if (!mounted) return null;
 
   return (
     <div
-      className="fixed pointer-events-none z-0 hidden sm:block opacity-30 dark:opacity-50"
+      className="fixed pointer-events-none z-0 opacity-20 dark:opacity-40 sm:opacity-30 sm:dark:opacity-50"
       style={{
-        bottom: 0,
-        right: 0,
-        width: 360,
-        height: 360,
-        transform: "translate(95px, 95px)",
+        bottom: isMobile ? 16 : 0,
+        right: isMobile ? -46 : 0,
+        width: isMobile ? 190 : 360,
+        height: isMobile ? 190 : 360,
+        transform: isMobile ? "translate(0, 0)" : "translate(95px, 95px)",
       }}
     >
       <Canvas
-        camera={{ position: [0, 0, 5.5], fov: 46 }}
-        gl={{ antialias: true, alpha: true }}
+        camera={{ position: [0, 0, isMobile ? 6.2 : 5.5], fov: isMobile ? 56 : 46 }}
+        dpr={isMobile ? [1, 1.2] : [1, 1.6]}
+        gl={{ antialias: !isMobile, alpha: true }}
         style={{ width: "100%", height: "100%" }}
       >
-        <DNAScene scroll={scroll} />
+        <DNAScene scroll={scroll} isMobile={isMobile} />
       </Canvas>
     </div>
   );

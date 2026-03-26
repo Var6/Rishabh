@@ -1,13 +1,14 @@
 "use client";
-import { useRef, useMemo, useEffect, useState } from "react";
+import { useRef, useMemo } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Float, MeshDistortMaterial } from "@react-three/drei";
 import * as THREE from "three";
+import useMobileSceneConfig from "./useMobileSceneConfig";
 
 /* ─── Nebula puff particles ─────────────────────────────────────── */
-function NebulaPuff({ scroll }: { scroll: number }) {
+function NebulaPuff({ scroll, isMobile }: { scroll: number; isMobile: boolean }) {
   const ref = useRef<THREE.Points>(null);
-  const count = 180;
+  const count = isMobile ? 82 : 180;
 
   const positions = useMemo(() => {
     const arr = new Float32Array(count * 3);
@@ -46,9 +47,9 @@ function NebulaPuff({ scroll }: { scroll: number }) {
 }
 
 /* ─── Accent violet micro-star ring ────────────────────────────── */
-function StarRingParticles() {
+function StarRingParticles({ isMobile }: { isMobile: boolean }) {
   const ref = useRef<THREE.Points>(null);
-  const count = 55;
+  const count = isMobile ? 24 : 55;
 
   const positions = useMemo(() => {
     const arr = new Float32Array(count * 3);
@@ -85,7 +86,7 @@ function StarRingParticles() {
 }
 
 /* ─── Gyroscope crystal: 3 axis-locked rings + octahedron core ─── */
-function Gyroscope({ scroll }: { scroll: number }) {
+function Gyroscope({ scroll, isMobile }: { scroll: number; isMobile: boolean }) {
   const coreRef  = useRef<THREE.Mesh>(null);
   const ringXRef = useRef<THREE.Mesh>(null); // spins on X
   const ringYRef = useRef<THREE.Mesh>(null); // spins on Y
@@ -117,7 +118,7 @@ function Gyroscope({ scroll }: { scroll: number }) {
   });
 
   return (
-    <Float speed={1.0} rotationIntensity={0.14} floatIntensity={0.5}>
+    <Float speed={isMobile ? 1.35 : 1.0} rotationIntensity={isMobile ? 0.2 : 0.14} floatIntensity={isMobile ? 0.62 : 0.5}>
       {/* Octahedron core — cyan glow */}
       <mesh ref={coreRef}>
         <octahedronGeometry args={[0.6, 0]} />
@@ -162,7 +163,7 @@ function Gyroscope({ scroll }: { scroll: number }) {
 }
 
 /* ─── Root scene — drifts downward + leftward on scroll ─────────── */
-function Scene({ scroll }: { scroll: number }) {
+function Scene({ scroll, isMobile }: { scroll: number; isMobile: boolean }) {
   const groupRef = useRef<THREE.Group>(null);
 
   useFrame(() => {
@@ -183,45 +184,36 @@ function Scene({ scroll }: { scroll: number }) {
       <pointLight position={[ 3, -2,  3]}  intensity={3.5} color="#c026d3" />
       <pointLight position={[ 0,  4,  2]}  intensity={2}   color="#8b5cf6" />
 
-      <Gyroscope scroll={scroll} />
-      <NebulaPuff scroll={scroll} />
-      <StarRingParticles />
+      <Gyroscope scroll={scroll} isMobile={isMobile} />
+      <NebulaPuff scroll={scroll} isMobile={isMobile} />
+      <StarRingParticles isMobile={isMobile} />
     </group>
   );
 }
 
-/* ─── Wrapper — fixed right-center, desktop only ───────────────── */
 export default function BackgroundScene3DRight() {
-  const [scroll, setScroll]   = useState(0);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    if (!window.matchMedia("(pointer: fine)").matches) return;
-    setMounted(true);
-    const onScroll = () => setScroll(window.scrollY);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  const { mounted, isMobile, scroll } = useMobileSceneConfig();
 
   if (!mounted) return null;
 
   return (
     <div
-      className="fixed pointer-events-none z-0 hidden sm:block opacity-35 dark:opacity-55"
+      className="fixed pointer-events-none z-0 opacity-25 dark:opacity-45 sm:opacity-35 sm:dark:opacity-55"
       style={{
-        right: 0,
-        top: "50%",
-        width: 380,
-        height: 380,
-        transform: "translate(90px, -50%)",
+        right: isMobile ? -52 : 0,
+        top: isMobile ? "36%" : "50%",
+        width: isMobile ? 210 : 380,
+        height: isMobile ? 210 : 380,
+        transform: isMobile ? "translate(0, -50%)" : "translate(90px, -50%)",
       }}
     >
       <Canvas
-        camera={{ position: [0, 0, 5.5], fov: 46 }}
-        gl={{ antialias: true, alpha: true }}
+        camera={{ position: [0, 0, isMobile ? 6 : 5.5], fov: isMobile ? 54 : 46 }}
+        dpr={isMobile ? [1, 1.2] : [1, 1.6]}
+        gl={{ antialias: !isMobile, alpha: true }}
         style={{ width: "100%", height: "100%" }}
       >
-        <Scene scroll={scroll} />
+        <Scene scroll={scroll} isMobile={isMobile} />
       </Canvas>
     </div>
   );
